@@ -94,7 +94,8 @@
           <input type="text" class="form-control" placeholder="Search">
         </div>
         
-        <button class="btn btn-primary" id="mind-navbar-modal-upload" >upload php.ini</button>
+        <button class="btn btn-primary" id="mind-navbar-modal-upload" data-toggle="modal" data-target="#mind-modal-upload"
+ class="btn bt" >upload php.ini</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -194,14 +195,14 @@ if ($fh = fopen("file.txt", "r")) {
       $equlator;
 
       if (strpos($line, ':') !== false) {
-     $equlator =  ":";
-   $value = trim(substr($line, strpos($line,$equlator)+1,strlen($line)),':');
-   $label = substr($line,0,strpos($line,$equlator));
-    } else {
-      $equlator =  "=";
-      $value = trim(substr($line, strpos($line,$equlator)+1,strlen($line)),'=');
-      $label = substr($line,0,strpos($line,$equlator));
-    }
+        $equlator = ":";
+        $value = trim(substr($line, strpos($line, $equlator) + 1, strlen($line)), ':');
+        $label = substr($line, 0, strpos($line, $equlator));
+      } else {
+        $equlator = "=";
+        $value = trim(substr($line, strpos($line, $equlator) + 1, strlen($line)), '=');
+        $label = substr($line, 0, strpos($line, $equlator));
+      }
       ?>
                   
                 <div class="form-group">
@@ -210,7 +211,7 @@ if ($fh = fopen("file.txt", "r")) {
      class="form-control" id="exampleInputEmail1" placeholder="<?php echo $label; ?>">
   </div>
                   <?php
-              
+
                 }
 
 
@@ -260,7 +261,7 @@ if you want the line breaks to be visible in the browser too, you can use the PH
   </div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog">
+<div class="modal fade" id="mind-modal-upload" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -268,11 +269,35 @@ if you want the line breaks to be visible in the browser too, you can use the PH
         <h4 class="modal-title">Upload File</h4>
       </div>
       <div class="modal-body">
-        <p>One fine body&hellip;</p>
+     
+     
+      <form>
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+  </div>
+  <!-- <div class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+  </div> -->
+  <div class="form-group">
+    <label for="exampleInputFile">File input</label>
+    <input type="file" id="exampleInputFile">
+    <p class="help-block">Example block-level help text here.</p>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox"> Check me out
+    </label>
+  </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id="mind-navbar-upload-file" class="btn btn-primary">Save changes</button>
+        <button type="button" id="mind-modal-file-upload" class="btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
