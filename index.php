@@ -156,7 +156,8 @@ if ($fh = fopen("file.txt", "r")) {
             echo '</div></div></div>';
           }
           $collapse_count++;
-          echo "<script>console.log('" . $collapse_count . "');</script>";
+          // count all section of collapse count
+          // echo "<script>console.log('" . $collapse_count . "');</script>";
           ?>
                 <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="heading<?php echo $collapse_count; ?>">
@@ -281,34 +282,115 @@ if you want the line breaks to be visible in the browser too, you can use the PH
     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
   </div> -->
   <div class="form-group">
-    <label for="exampleInputFile">File input</label>
-    <input type="file" id="exampleInputFile">
-    <p class="help-block">Example block-level help text here.</p>
+    <label for="mind_cofigInputFile">File input</label>
+    <input type="file" id="mind_cofigInputFile">
+    <p class="help-block">upload File for Processing.</p>
   </div>
   <div class="checkbox">
     <label>
       <input type="checkbox"> Check me out
     </label>
   </div>
-  <button type="submit" class="btn btn-default">Submit</button>
+ 
 </form>
 
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" id="mind-modal-file-upload" class="btn btn-primary">Save changes</button>
+        <button type="submit" id="mind-modal-file-upload" class="btn btn-primary">processing</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- Progress Bar  -->
+<div id="progress-wrp">
+    <div class="progress-bar"></div>
+    <div class="status">0%</div>
+</div>
+<!-- /Progress Bar  -->
 <script src="resources/vendor/prism/prism.js"></script>
 <script src="resources/vendor/prism/linenumbers/linenumbers.js"></script>
 <script>
 
 $(document).ready(function () {
-  
+
+
+  var Upload = function (file) {
+    this.file = file;
+};
+
+Upload.prototype.getType = function() {
+    return this.file.type;
+};
+Upload.prototype.getSize = function() {
+    return this.file.size;
+};
+Upload.prototype.getName = function() {
+    return this.file.name;
+};
+Upload.prototype.doUpload = function () {
+    var that = this;
+    var formData = new FormData();
+
+    // add assoc key values, this will be posts values
+    formData.append("file", this.file, this.getName());
+    formData.append("upload_file", true);
+
+    $.ajax({
+        type: "POST",
+        url: "/app/processor.php",
+        xhr: function () {
+            var myXhr = $.ajaxSettings.xhr();
+            if (myXhr.upload) {
+                myXhr.upload.addEventListener('progress', that.progressHandling, false);
+                
+            }
+            return myXhr;
+        },
+        success: function (data) {
+            // your callback here
+            alert("working"+data);
+          },
+          error: function (error) {
+            console.log("error");
+            // handle error
+        },
+        async: true,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        timeout: 60000
+    });
+};
+
+Upload.prototype.progressHandling = function (event) {
+ 
+    var percent = 0;
+    var position = event.loaded || event.position;
+    var total = event.total;
+    var progress_bar_id = "#progress-wrp";
+    if (event.lengthComputable) {
+        percent = Math.ceil(position / total * 100);
+    }
+    // update progressbars classes so it fits your code
+    $(progress_bar_id + " .progress-bar").css("width", +percent + "%");
+    $(progress_bar_id + " .status").text(percent + "%");
+};
+
+
+//Change id to your id
+$("#mind_cofigInputFile").on("change", function (e) {
+    var file = $(this)[0].files[0];
+    var upload = new Upload(file);
+    console.log(upload.getType);
+    // maby check size or type here with upload.getSize() and upload.getType()
+
+    // execute upload
+    upload.doUpload();
+});
 
 });
 </script>
